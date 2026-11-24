@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111827">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <title>Brainrot Mania — Loja</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Brainrot Mania, início">
+      <span class="brand-mark">B!</span><span>brainrot<span class="brand-accent">mania</span></span>
+    </a>
+    <nav aria-label="Navegação principal">
+      <button class="nav-button active" data-view="catalog">Loja</button>
+      <button class="nav-button hidden" id="orders-nav" data-view="orders">Meus pedidos</button>
+      <button class="nav-button hidden" id="admin-nav" data-view="admin">Admin</button>
+      <button class="nav-button" id="account-nav" data-view="account">Entrar</button>
+      <button class="cart-button" data-view="cart">Carrinho <span id="cart-count">0</span></button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="catalog-view" class="view">
+      <div class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">COLECIONE O INESPERADO</span>
+          <h1>Seu próximo brainrot<br><span>está aqui.</span></h1>
+          <p>Personagens caoticamente adoráveis, prontos para morar na sua coleção.</p>
+        </div>
+        <div class="hero-orbit" aria-hidden="true"><span>🌀</span><i>✨</i><b>👀</b></div>
+      </div>
+      <div class="catalog-toolbar">
+        <div><h2>Catálogo completo</h2><p id="catalog-count">Carregando personagens...</p></div>
+        <div class="catalog-filters">
+          <label class="rarity-filter"><span>Raridade</span><select id="rarity-filter" aria-label="Filtrar por raridade"><option value="">Todas</option></select></label>
+          <label class="search-box"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Buscar um brainrot..." aria-label="Buscar brainrots"></label>
+        </div>
+      </div>
+      <div id="catalog-grid" class="product-grid" aria-live="polite"></div>
+      <p id="catalog-error" class="message error hidden"></p>
+    </section>
+
+    <section id="detail-view" class="view hidden">
+      <button class="back-button" data-view="catalog">← Voltar à loja</button>
+      <div id="detail-content"></div>
+    </section>
+
+    <section id="cart-view" class="view hidden">
+      <div class="section-heading"><span class="eyebrow">SUA COLEÇÃO COMEÇA AQUI</span><h1>Carrinho</h1></div>
+      <div id="cart-content"></div>
+    </section>
+
+    <section id="orders-view" class="view hidden">
+      <div class="section-heading"><span class="eyebrow">SUAS AQUISIÇÕES</span><h1>Meus pedidos</h1></div>
+      <div id="orders-content"></div>
+    </section>
+
+    <section id="account-view" class="view hidden">
+      <div class="section-heading"><span class="eyebrow">SUA CONTA BRAINROT MANIA</span><h1 id="account-title">Entre ou crie sua conta</h1></div>
+      <div class="form-panel account-panel">
+        <div id="logged-in-panel" class="hidden">
+          <p id="account-welcome"></p>
+          <div class="account-actions">
+            <button type="button" class="secondary-button" data-view="orders">Meus pedidos</button>
+            <button type="button" class="secondary-button hidden" id="account-admin-button" data-view="admin">Admin</button>
+          </div>
+          <button id="logout-button" class="secondary-button">Sair da conta</button>
+        </div>
+        <div id="auth-panel">
+          <div class="form-tabs">
+            <button type="button" class="selected" data-auth-mode="login">Entrar</button>
+            <button type="button" data-auth-mode="register">Criar conta</button>
+          </div>
+          <form id="auth-form" class="form-grid">
+            <label>Usuário<input name="username" minlength="3" maxlength="30" autocomplete="username" required></label>
+            <label>Senha<input name="password" type="password" minlength="8" maxlength="128" autocomplete="current-password" required></label>
+            <p class="form-hint">A senha deve ter pelo menos 8 caracteres.</p>
+            <button class="primary-button" type="submit">Entrar</button>
+            <p id="auth-error" class="form-error hidden"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section id="admin-view" class="view hidden">
+      <div class="section-heading"><span class="eyebrow">ÁREA RESTRITA</span><h1>Adicionar Brainrot</h1></div>
+      <form id="admin-form" class="form-panel form-grid">
+        <label>Nome<input name="name" maxlength="80" required></label>
+        <label>Descrição<textarea name="description" maxlength="600" rows="3" required></textarea></label>
+        <div class="form-row">
+          <label>Preço (R$)<input name="price" type="number" min="0" max="99999999" step="0.01" required></label>
+          <label>Estoque<input name="stock" type="number" min="0" max="1000000" step="1" required></label>
+        </div>
+        <div class="form-row">
+          <label>Categoria<select name="category_id" id="admin-category" required></select></label>
+          <label>Raridade<select name="rarity_id" id="admin-rarity" required></select></label>
+        </div>
+        <label>Imagem (opcional, PNG/JPG/WebP até 5 MB)<input name="image" type="file" accept="image/png,image/jpeg,image/webp"></label>
+        <p class="form-hint">Se não enviar uma imagem, será criado um placeholder individual para o produto.</p>
+        <button class="primary-button" type="submit">Cadastrar no catálogo</button>
+        <p id="admin-message" class="form-message hidden"></p>
+      </form>
+    </section>
+  </main>
+  <footer><span class="brand-mark small">B!</span><span>Brainrot Mania · Diversão em estado avançado.</span></footer>
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
